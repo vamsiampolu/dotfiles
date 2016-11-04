@@ -24,7 +24,14 @@ Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'wakatime/vim-wakatime'
 
+Plugin 'altercation/vim-colors-solarized'
+
 call vundle#end()
+
+"use the solarized dark theme
+syntax enable
+set background=dark
+colorscheme solarized
 
 "set up airline
 set laststatus=2
