@@ -7,10 +7,10 @@ set number
 set showmode "shows current mode down at the bottom
 set backspace=indent,eol,start "allow backspace in insert mode
 set autoread "reload files changed outside vim
+set ruler
+set showcmd
 syntax on "turn on syntax highlighting
 
-"setup vundle with the following plugins
-"1. airline 2. wakatime 3. syntastic
 "Vundle requires this
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -45,6 +45,7 @@ set shiftwidth=2
 set softtabstop=2
 set tabstop=2
 set expandtab
+
 
 "Start scrolling three lines before the horizontal window border
 set scrolloff=3
