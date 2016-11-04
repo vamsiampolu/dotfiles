@@ -22,7 +22,13 @@ Plugin 'vim-airline/vim-airline'
 
 Plugin 'vim-airline/vim-airline-themes'
 
+Plugin 'wakatime/vim-wakatime'
+
 call vundle#end()
+
+"set up airline
+set laststatus=2
+let g:airline_powerline_fonts=1
 
 "Fix indentation for consistency
 set autoindent
