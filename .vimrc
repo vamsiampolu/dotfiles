@@ -9,6 +9,21 @@ set backspace=indent,eol,start "allow backspace in insert mode
 set autoread "reload files changed outside vim
 syntax on "turn on syntax highlighting
 
+"setup vundle with the following plugins
+"1. airline 2. wakatime 3. syntastic
+"Vundle requires this
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'vim-airline/vim-airline'
+
+Plugin 'vim-airline/vim-airline-themes'
+
+call vundle#end()
+
 "Fix indentation for consistency
 set autoindent
 set smartindent
