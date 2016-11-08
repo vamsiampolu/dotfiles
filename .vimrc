@@ -30,6 +30,8 @@ Plugin 'altercation/vim-colors-solarized'
 
 Plugin 'scrooloose/syntastic'
 
+Plugin 'tpope/vim-endwise'
+
 call vundle#end()
 
 "use the solarized dark theme
