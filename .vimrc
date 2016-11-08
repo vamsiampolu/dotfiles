@@ -11,6 +11,8 @@ set ruler
 set showcmd
 syntax on "turn on syntax highlighting
 
+"setup vundle with the following plugins
+"1. airline 2. wakatime 3. syntastic
 "Vundle requires this
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -26,6 +28,8 @@ Plugin 'wakatime/vim-wakatime'
 
 Plugin 'altercation/vim-colors-solarized'
 
+Plugin 'scrooloose/syntastic'
+
 call vundle#end()
 
 "use the solarized dark theme
@@ -36,6 +40,26 @@ colorscheme solarized
 "set up airline
 set laststatus=2
 let g:airline_powerline_fonts=1
+
+"set up syntastic with the recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatusLineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0 "skip checking on save and exit
+
+
+"aggregate errors from all checkers for a file type
+let g:syntastic_aggregate_errors = 1
+"automatically open and close error list when an error is detected
+let g:syntastic_always_populate_loc_list = 1
+
+"attempt to add rubocop to syntastic as a ruby checker
+let g:syntastic_ruby_checkers = ['mri','rubocop']
+
 
 "Fix indentation for consistency
 set autoindent
