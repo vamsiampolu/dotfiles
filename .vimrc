@@ -52,16 +52,31 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0 "skip checking on save and exit
-
+"use locally installed version of eslint with syntastic, extracted from mtscout6/syntastic-local-eslint.vim
+let s:lcd = fnameescape(getcwd())
+silent! exec "lcd" expand('%:p:h')
+let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
+exec "lcd" s:lcd
+let b:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 
 "aggregate errors from all checkers for a file type
 let g:syntastic_aggregate_errors = 1
 "automatically open and close error list when an error is detected
 let g:syntastic_always_populate_loc_list = 1
 
-"attempt to add rubocop to syntastic as a ruby checker
+"add rubocop to syntastic as a ruby checker
 let g:syntastic_ruby_checkers = ['mri','rubocop']
 
+"check if a file exists
+function! HasConfig(file, dir)
+  return findfile(a:file,escape(a:dir,' ') . ';') !=# ''
+endfunction
+
+"checks for .eslintrc and .jshintrc before falling back to standard
+autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
+    \ HasConfig('.eslintrc', expand('<amatch>:h')) ? ['eslint'] :
+    \ HasConfig('.jshintrc', expand('<amatch>:h')) ? ['jshint'] :
+    \     ['standard']
 
 "Fix indentation for consistency
 set autoindent
