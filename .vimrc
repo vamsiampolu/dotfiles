@@ -2,8 +2,8 @@
 set nocompatible
 "when both relative number and number are active, it shows the relative number
 "for all lines but the absolute line number for current line
-set relativenumber 
-set number 
+set relativenumber
+set number
 set showmode "shows current mode down at the bottom
 set backspace=indent,eol,start "allow backspace in insert mode
 set autoread "reload files changed outside vim
@@ -91,7 +91,10 @@ set expandtab
 "Start scrolling three lines before the horizontal window border
 set scrolloff=3
 
-"Strip trailing whitespace (:ss)
+"remap the leader key from \ to ,
+let mapleader = ","
+
+"Strip trailing whitespace (,ss)
 function! StripWhitespace()
   let save_cursor = getpos(".")
   let old_query = getreg("/")
@@ -118,12 +121,12 @@ set list listchars=tab:\ \ ,trail:.
  "open new windows to the right and bottom
  set splitbelow
  set splitright
- 
+
 " Auto indent pasted text
 nnoremap p p=`]<C-o>
 nnoremap P P=`]<C-o>
 
-"save file as root(:W)
+"save file as root(,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
 if has("autocmd")
@@ -132,3 +135,60 @@ if has("autocmd")
   "Treat .md files as markdown
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
 endif
+
+"=========================
+
+fun! VexToggle(dir)
+  if exists("t:vex_buf_nr")
+    call VexClose()
+  else
+    call VexOpen(a:dir)
+  endif
+endf
+
+fun! VexOpen(dir)
+  let g:netrw_browse_split=4 "open files in previous window
+  let vex_width=25
+
+  execute "Vexplore " . a:dir
+  let t:vex_buf_nr = bufnr("%")
+  wincmd H
+
+  call VexSize(vex_width)
+endf
+
+
+fun! VexClose()
+  let cur_win_nr = winnr()
+  let target_nr = (cur_win_nr == 1 ? winnr("#"): cur_win_nr )
+  1wincmd w
+  close
+  unlet t:vex_buf_nr
+
+  execute (target_nr - 1) . "wincmd w"
+  call NormalizeWidths()
+endf
+
+fun! VexSize(vex_width)
+  execute "vertical resize" . a:vex_width
+  set winfixwidth
+  call NormalizeWidths()
+endf
+
+fun! NormalizeWidths()
+  let eadir_pref=&eadirection
+  set eadirection=hor
+  set equalalways! equalalways!
+  let eadirection = eadir_pref
+endf
+
+"press :Tab to open netrw in the project directory
+noremap <Leader><Tab> :call VexToggle(getcwd())<CR>
+"press :` to open netrw in the directory of the file being edited
+noremap <Leader>` :call VexToggle("")<CR>
+
+augroup NetrwGroup
+  autocmd! BufEnter * call NormalizeWidths()
+augroup END
+
+"=========================
