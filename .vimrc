@@ -191,4 +191,10 @@ augroup NetrwGroup
   autocmd! BufEnter * call NormalizeWidths()
 augroup END
 
+"optional netrw settings copied from Ivan Brennac
+let g:netrw_liststyle=0
+let g:netrw_banner=0
+let g:netrw_altv=0
+let g:netrw_preview=1
+
 "=========================
