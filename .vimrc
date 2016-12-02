@@ -32,6 +32,8 @@ Plugin 'scrooloose/syntastic'
 
 Plugin 'tpope/vim-endwise'
 
+Plugin 'xolox/vim-easytags'
+
 call vundle#end()
 
 "use the solarized dark theme
@@ -135,6 +137,9 @@ if has("autocmd")
   "Treat .md files as markdown
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
 endif
+
+"setup async tag generation with easytags-vim
+:let g:easytags_async = 1
 
 "=========================
 
