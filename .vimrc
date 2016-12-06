@@ -32,6 +32,8 @@ Plugin 'scrooloose/syntastic'
 
 Plugin 'tpope/vim-endwise'
 
+Plugin 'xolox/vim-misc'
+
 Plugin 'xolox/vim-easytags'
 
 call vundle#end()
@@ -119,6 +121,12 @@ set list listchars=tab:\ \ ,trail:.
  nnoremap <C-k> <C-w>k
  nnoremap <C-h> <C-w>h
  nnoremap <C-l> <C-w>l
+
+" Get off my lawn
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
 
  "open new windows to the right and bottom
  set splitbelow
