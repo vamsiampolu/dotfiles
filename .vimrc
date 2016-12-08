@@ -62,6 +62,9 @@ silent! exec "lcd" expand('%:p:h')
 let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
 exec "lcd" s:lcd
 let b:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+let g:syntastic_javascript_flowtype_exe = 'flow'
+let g:syntastic_javascript_checkers = ['eslint', 'flow']
+
 
 "aggregate errors from all checkers for a file type
 let g:syntastic_aggregate_errors = 1
