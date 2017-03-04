@@ -36,6 +36,18 @@ Plugin 'xolox/vim-misc'
 
 Plugin 'xolox/vim-easytags'
 
+Plugin 'flowtype/vim-flow'
+
+Plugin 'Shougo/vimproc.vim'
+
+Plugin 'godlygeek/tabular'
+
+"provides linting and type-information for haskell
+Plugin 'eagletmt/ghcmod-vim'
+
+"syntax highlighting alternative(??)
+Plugin 'neovimhaskell/haskell-vim'
+
 call vundle#end()
 
 "use the solarized dark theme
@@ -65,6 +77,14 @@ let b:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{
 let g:syntastic_javascript_flowtype_exe = 'flow'
 let g:syntastic_javascript_checkers = ['eslint', 'flow']
 
+"Look for a local flowtype installation for vim-flow
+let local_flow = finddir('node_modules', '.;') . '/.bin/flow'
+if matchstr(local_flow, "^\/\\w") == ''
+  let local_flow= getcwd() . "/" . local_flow
+endif
+if executable(local_flow)
+  let g:flow#flowpath = local_flow
+endif
 
 "aggregate errors from all checkers for a file type
 let g:syntastic_aggregate_errors = 1
@@ -84,6 +104,8 @@ autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
     \ HasConfig('.eslintrc', expand('<amatch>:h')) ? ['eslint'] :
     \ HasConfig('.jshintrc', expand('<amatch>:h')) ? ['jshint'] :
     \     ['standard']
+
+let g:flow#autoclose=1
 
 "Fix indentation for consistency
 set autoindent
@@ -151,6 +173,19 @@ endif
 
 "setup async tag generation with easytags-vim
 :let g:easytags_async = 1
+
+"Hook into `ghc-mod` completion capabilities
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
+"Setup code formatting using haskell with tabularize
+let g:haskell_tabular=1
+vmap a= :Tabularize /=<CR>
+vmap a;= :Tabularize /::<CR>
+vmap a-= :Tabularize /-><CR>
+
 
 "=========================
 
