@@ -32,6 +32,8 @@ Plugin 'scrooloose/syntastic'
 
 Plugin 'tpope/vim-endwise'
 
+Plugin 'tpope/vim-obsession'
+
 Plugin 'xolox/vim-misc'
 
 Plugin 'xolox/vim-easytags'
@@ -129,6 +131,20 @@ endfunction
 
 noremap <leader>ss :call StripWhitespace()<CR>
 
+" If a session exists load it, otherwise create a new session using Obsession
+augroup sessionstart
+  " clear all previous autocommands
+  autocmd!
+  " add an auto command to load a session if it exists
+   autocmd VimEnter * nested
+      \ if !argc() && empty(v:this_session) && !&modified|
+        \   if filereadable('Session.vim') |
+          \     source Session.vim |
+          \   elseif |
+            \     Obsession |
+          \   endif |
+      \ endif
+ augroup end
 " *********************************************************************************
 
 "set up airline
