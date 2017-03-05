@@ -48,6 +48,15 @@ Plugin 'eagletmt/ghcmod-vim'
 "syntax highlighting alternative(??)
 Plugin 'neovimhaskell/haskell-vim'
 
+"Javascript syntax support
+Plugin 'pangloss/vim-javascript'
+
+"JSX support for React
+Plugin 'mxw/vim-jsx'
+
+"JSON highlighting plugin
+Plugin 'leshill/vim-json'
+
 "Plugin for highlighting template strings in javascript
 Plugin 'Quramy/vim-js-pretty-template'
 
@@ -144,6 +153,7 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
   "Treat .md files as markdown
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+
 endif
 
 "use the solarized dark theme
@@ -157,6 +167,26 @@ noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
 "setup async tag generation with easytags-vim
 :let g:easytags_async = 1
+
+"jsdoc plugin highlighting
+let g:javascript_plugin_jsdoc = 1
+
+"Highlight jsx in js files
+let g:jsx_ext_required = 0
+
+"Enable flow plugin syntax
+let g:javascript_plugin_flow = 1
+
+
+"Make the completion menus readable
+highlight Pmenu ctermfg=0 ctermbg=3
+highlight PmenuSel ctermfg=0 ctermbg=7
+
+"The following should be done automatically for the default colour scheme
+"at least, but it is not in Vim 7.0.17.
+if &bg == "dark"
+  highlight MatchParen ctermbg=darkblue guibg=blue
+endif
 
 " *********************************************************************************
 
