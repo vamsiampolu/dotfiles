@@ -48,8 +48,7 @@ Plugin 'eagletmt/ghcmod-vim'
 "syntax highlighting alternative(??)
 Plugin 'neovimhaskell/haskell-vim'
 
-"Javascript syntax support
-Plugin 'pangloss/vim-javascript'
+"Javascript syntax support Plugin 'pangloss/vim-javascript'
 
 "JSX support for React
 Plugin 'mxw/vim-jsx'
@@ -138,10 +137,25 @@ let g:airline_powerline_fonts=1
 
 " ************************ Syntax Highlighting *******************************
 
-"Automatically apply template string highlighting for Javascript, Typescript
-autocmd FileType javascript JsPreTmpl html
-autocmd FileType typescript JsPreTmpl html
-autocmd FileType typescript syn clear foldBraces
+"use the solarized dark theme
+syntax enable
+set background=dark
+colorscheme solarized
+
+"The following should be done automatically for the default colour scheme
+"at least, but it is not in Vim 7.0.17.
+if &bg == "dark"
+  highlight MatchParen ctermbg=darkblue guibg=blue
+endif
+
+" Group all auto commands into an augroup called vimrc
+augroup vimrc
+
+  "Automatically apply template string highlighting for Javascript, Typescript
+  autocmd FileType javascript JsPreTmpl html
+  autocmd FileType typescript JsPreTmpl html
+  autocmd FileType typescript syn clear foldBraces
+augroup end
 
 "set up syntastic with the recommended settings
 set statusline+=%#warningmsg#
@@ -149,24 +163,15 @@ set statusline+=%{SyntasticStatusLineFlag()}
 set statusline+=%*
 
 if has("autocmd")
-  "Treat .json files as .js
-  autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-  "Treat .md files as markdown
-  autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
-
+ " Merge autocommands into the vimrc group
+  augroup vimrc
+    "Treat .md files as markdown
+    autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+  augroup end
 endif
-
-"use the solarized dark theme
-syntax enable
-set background=dark
-colorscheme solarized
 
 "save file as root(,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
-
-
-"setup async tag generation with easytags-vim
-:let g:easytags_async = 1
 
 "jsdoc plugin highlighting
 let g:javascript_plugin_jsdoc = 1
@@ -177,16 +182,10 @@ let g:jsx_ext_required = 0
 "Enable flow plugin syntax
 let g:javascript_plugin_flow = 1
 
-
 "Make the completion menus readable
 highlight Pmenu ctermfg=0 ctermbg=3
 highlight PmenuSel ctermfg=0 ctermbg=7
 
-"The following should be done automatically for the default colour scheme
-"at least, but it is not in Vim 7.0.17.
-if &bg == "dark"
-  highlight MatchParen ctermbg=darkblue guibg=blue
-endif
 
 " *********************************************************************************
 
@@ -281,11 +280,15 @@ function! HasConfig(file, dir)
   return findfile(a:file,escape(a:dir,' ') . ';') !=# ''
 endfunction
 
-"checks for .eslintrc and .jshintrc before falling back to standard
-autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
+" Merge commands into augroup vimrc
+augroup vimrc
+  "checks for .eslintrc and .jshintrc before falling back to standard
+  autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
     \ HasConfig('.eslintrc', expand('<amatch>:h')) ? ['eslint'] :
     \ HasConfig('.jshintrc', expand('<amatch>:h')) ? ['jshint'] :
     \     ['standard']
+
+augroup end
 
 " Typescript syntax checking using tsuqoyami
 let g:tsuqoyami_disable_quickfix = 1
@@ -331,8 +334,28 @@ vmap a-= :Tabularize /-><CR>
 " current or parent directory
 
 let g:angular_cli_stylesheet_format = 'css'
-autocmd VimEnter *
-  if globpath('.,..','node_modules/@angular') != '' | call angular_cli#init() |
-endif
+" Merge auto commands into the vimrc augroup
+augroup vimrc
+  autocmd VimEnter *
+    if globpath('.,..','node_modules/@angular') != '' | call angular_cli#init() |
+  endif
+augroup end
 
 " *********************************************************************
+
+" ****************** EasyTags configuration **********************************
+
+"Async ctags updates
+let g:easytags_async = 1
+
+"Store tags in ./tags
+let g:easytags_file = '~/.vim/tags'
+
+"Use project specific tag files
+set tags=./tags;
+let g:easytags_dynamic_files = 2
+
+"Set ctags by file type
+let g:easytags_dynamic_files = 1
+
+" *******************************************************************************
