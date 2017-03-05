@@ -48,66 +48,57 @@ Plugin 'eagletmt/ghcmod-vim'
 "syntax highlighting alternative(??)
 Plugin 'neovimhaskell/haskell-vim'
 
+"Plugin for highlighting template strings in javascript
+Plugin 'Quramy/vim-js-pretty-template'
+
+" typescript syntax highlighting
+Plugin 'leafgarland/typescript-vim'
+
+" Tsuqoyami IDE for Typescript
+Plugin 'Quramy/tsuquyomi'
+
+" Angular CLI Plugin
+Plugin 'bdauria/angular-cli.vim'
+
 call vundle#end()
 
-"use the solarized dark theme
-syntax enable
-set background=dark
-colorscheme solarized
+" ******************** General Settings **************************************
 
-"set up airline
-set laststatus=2
-let g:airline_powerline_fonts=1
+"remap the leader key from \ to ,
+let mapleader = ","
 
-"set up syntastic with the recommended settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatusLineFlag()}
-set statusline+=%*
+" Get off my lawn
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0 "skip checking on save and exit
-"use locally installed version of eslint with syntastic, extracted from mtscout6/syntastic-local-eslint.vim
-let s:lcd = fnameescape(getcwd())
-silent! exec "lcd" expand('%:p:h')
-let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
-exec "lcd" s:lcd
-let b:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-let g:syntastic_javascript_flowtype_exe = 'flow'
-let g:syntastic_javascript_checkers = ['eslint', 'flow']
+" Quicker window movement
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
 
-"Look for a local flowtype installation for vim-flow
-let local_flow = finddir('node_modules', '.;') . '/.bin/flow'
-if matchstr(local_flow, "^\/\\w") == ''
-  let local_flow= getcwd() . "/" . local_flow
-endif
-if executable(local_flow)
-  let g:flow#flowpath = local_flow
-endif
+" Auto indent pasted text
+nnoremap p p=`]<C-o>
+nnoremap P P=`]<C-o>
 
-"aggregate errors from all checkers for a file type
-let g:syntastic_aggregate_errors = 1
-"automatically open and close error list when an error is detected
-let g:syntastic_always_populate_loc_list = 1
+"open new windows to the right and bottom
+set splitbelow
+set splitright
 
-"add rubocop to syntastic as a ruby checker
-let g:syntastic_ruby_checkers = ['mri','rubocop']
+"Start scrolling three lines before the horizontal window border
+set scrolloff=3
 
-"check if a file exists
-function! HasConfig(file, dir)
-  return findfile(a:file,escape(a:dir,' ') . ';') !=# ''
-endfunction
+" *********************************************************************************
 
-"checks for .eslintrc and .jshintrc before falling back to standard
-autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
-    \ HasConfig('.eslintrc', expand('<amatch>:h')) ? ['eslint'] :
-    \ HasConfig('.jshintrc', expand('<amatch>:h')) ? ['jshint'] :
-    \     ['standard']
-
-let g:flow#autoclose=1
+" ********************** Indentation *****************************************
 
 "Fix indentation for consistency
+
+filetype plugin on
+filetype indent on
+
 set autoindent
 set smartindent
 set smarttab
@@ -116,12 +107,8 @@ set softtabstop=2
 set tabstop=2
 set expandtab
 
-
-"Start scrolling three lines before the horizontal window border
-set scrolloff=3
-
-"remap the leader key from \ to ,
-let mapleader = ","
+"Display tabs and trailing spaces visually
+set list listchars=tab:\ \ ,trail:.
 
 "Strip trailing whitespace (,ss)
 function! StripWhitespace()
@@ -134,35 +121,23 @@ endfunction
 
 noremap <leader>ss :call StripWhitespace()<CR>
 
+" *********************************************************************************
 
-filetype plugin on
-filetype indent on
+"set up airline
+set laststatus=2
+let g:airline_powerline_fonts=1
 
-"Display tabs and trailing spaces visually
-set list listchars=tab:\ \ ,trail:.
+" ************************ Syntax Highlighting *******************************
 
-" Quicker window movement
- nnoremap <C-j> <C-w>j
- nnoremap <C-k> <C-w>k
- nnoremap <C-h> <C-w>h
- nnoremap <C-l> <C-w>l
+"Automatically apply template string highlighting for Javascript, Typescript
+autocmd FileType javascript JsPreTmpl html
+autocmd FileType typescript JsPreTmpl html
+autocmd FileType typescript syn clear foldBraces
 
-" Get off my lawn
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-
- "open new windows to the right and bottom
- set splitbelow
- set splitright
-
-" Auto indent pasted text
-nnoremap p p=`]<C-o>
-nnoremap P P=`]<C-o>
-
-"save file as root(,W)
-noremap <leader>W :w !sudo tee % > /dev/null<CR>
+"set up syntastic with the recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatusLineFlag()}
+set statusline+=%*
 
 if has("autocmd")
   "Treat .json files as .js
@@ -171,23 +146,21 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
 endif
 
+"use the solarized dark theme
+syntax enable
+set background=dark
+colorscheme solarized
+
+"save file as root(,W)
+noremap <leader>W :w !sudo tee % > /dev/null<CR>
+
+
 "setup async tag generation with easytags-vim
 :let g:easytags_async = 1
 
-"Hook into `ghc-mod` completion capabilities
-map <silent> tw :GhcModTypeInsert<CR>
-map <silent> ts :GhcModSplitFunCase<CR>
-map <silent> tq :GhcModType<CR>
-map <silent> te :GhcModTypeClear<CR>
+" *********************************************************************************
 
-"Setup code formatting using haskell with tabularize
-let g:haskell_tabular=1
-vmap a= :Tabularize /=<CR>
-vmap a;= :Tabularize /::<CR>
-vmap a-= :Tabularize /-><CR>
-
-
-"=========================
+" ********************** Open Sidebar using netrw ****************************
 
 fun! VexToggle(dir)
   if exists("t:vex_buf_nr")
@@ -248,4 +221,88 @@ let g:netrw_banner=0
 let g:netrw_altv=0
 let g:netrw_preview=1
 
-"=========================
+" *********************************************************************************
+
+" *************************** Syntastic checking *****************************
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0 "skip checking on save and exit
+"use locally installed version of eslint with syntastic, extracted from mtscout6/syntastic-local-eslint.vim
+let s:lcd = fnameescape(getcwd())
+silent! exec "lcd" expand('%:p:h')
+let s:eslint_path = system('PATH=$(npm bin):$PATH && which eslint')
+exec "lcd" s:lcd
+let b:syntastic_javascript_eslint_exec = substitute(s:eslint_path, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+let g:syntastic_javascript_flowtype_exe = 'flow'
+let g:syntastic_javascript_checkers = ['eslint', 'flow']
+
+"aggregate errors from all checkers for a file type
+let g:syntastic_aggregate_errors = 1
+"automatically open and close error list when an error is detected
+let g:syntastic_always_populate_loc_list = 1
+
+"add rubocop to syntastic as a ruby checker
+let g:syntastic_ruby_checkers = ['mri','rubocop']
+
+"check if a file exists
+function! HasConfig(file, dir)
+  return findfile(a:file,escape(a:dir,' ') . ';') !=# ''
+endfunction
+
+"checks for .eslintrc and .jshintrc before falling back to standard
+autocmd BufNewFile,BufReadPre *.js  let b:syntastic_checkers =
+    \ HasConfig('.eslintrc', expand('<amatch>:h')) ? ['eslint'] :
+    \ HasConfig('.jshintrc', expand('<amatch>:h')) ? ['jshint'] :
+    \     ['standard']
+
+" Typescript syntax checking using tsuqoyami
+let g:tsuqoyami_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+
+" *********************************************************************
+
+" ********************* Flow type syntax highlighting ************************
+
+let g:flow#autoclose=1
+
+"Look for a local flowtype installation for vim-flow
+let local_flow = finddir('node_modules', '.;') . '/.bin/flow'
+if matchstr(local_flow, "^\/\\w") == ''
+  let local_flow= getcwd() . "/" . local_flow
+endif
+
+if executable(local_flow)
+  let g:flow#flowpath = local_flow
+endif
+
+" *********************************************************************
+
+" ****************************** Haskell *************************************
+
+"Hook into `ghc-mod` completion capabilities
+map <silent> tw :GhcModTypeInsert<CR>
+map <silent> ts :GhcModSplitFunCase<CR>
+map <silent> tq :GhcModType<CR>
+map <silent> te :GhcModTypeClear<CR>
+
+"Setup code formatting using haskell with tabularize
+let g:haskell_tabular=1
+vmap a= :Tabularize /=<CR>
+vmap a;= :Tabularize /::<CR>
+vmap a-= :Tabularize /-><CR>
+
+" *********************************************************************
+
+" ***************** Angular CLI ***********************************
+
+" only enable angular-cli if angular is found in the node_modules within the
+" current or parent directory
+
+let g:angular_cli_stylesheet_format = 'css'
+autocmd VimEnter *
+  if globpath('.,..','node_modules/@angular') != '' | call angular_cli#init() |
+endif
+
+" *********************************************************************
