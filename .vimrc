@@ -12,8 +12,6 @@ set showcmd
 syntax on "turn on syntax highlighting
 
 "setup vundle with the following plugins
-"1. airline 2. wakatime 3. syntastic
-"Vundle requires this
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -100,6 +98,13 @@ set splitright
 "Start scrolling three lines before the horizontal window border
 set scrolloff=3
 
+"Avoid seeing .swp, .swo and ~ files in the working directory
+" the "//" at the end of each directory means that file names will be built from the complete path
+" to the file with all path separators substituted to percent "%" sign.
+" This will ensure file name uniqueness in the preserve directory.set undodir=~/.vim/.undo//
+set backupdir=~/.vim/.backup//
+set directory=~/.vim/.swp//
+
 " *********************************************************************************
 
 " ********************** Indentation *****************************************
@@ -137,14 +142,14 @@ augroup sessionstart
   autocmd!
   " add an auto command to load a session if it exists
    autocmd VimEnter * nested
-      \ if !argc() && empty(v:this_session) && !&modified|
-        \   if filereadable('Session.vim') |
-          \     source Session.vim |
-          \   elseif |
-            \     Obsession |
-          \   endif |
+      \ if !argc() && empty(v:this_session) && !&modified |
+      \   if filereadable('Session.vim') |
+      \    source Session.vim |
+      \      elseif |
+      \       Obsession |
+      \    endif |
       \ endif
- augroup end
+augroup end
 " *********************************************************************************
 
 "set up airline
