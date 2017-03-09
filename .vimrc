@@ -176,6 +176,7 @@ augroup vimrc
   autocmd FileType javascript JsPreTmpl html
   autocmd FileType typescript JsPreTmpl html
   autocmd FileType typescript syn clear foldBraces
+  autocmd FileType typescript setlocal completeopt+=menu,preview
 augroup end
 
 "set up syntastic with the recommended settings
@@ -313,7 +314,7 @@ augroup end
 
 " Typescript syntax checking using tsuqoyami
 let g:tsuqoyami_disable_quickfix = 1
-let g:syntastic_typescript_checkers = ['tsuquyomi']
+let g:syntastic_typescript_checkers = ['tslint', 'tsuquyomi']
 
 " *********************************************************************
 
@@ -372,9 +373,9 @@ let g:easytags_async = 1
 "Store tags in ./tags
 let g:easytags_file = '~/.vim/tags'
 
-"Use project specific tag files
-set tags=./tags;
-let g:easytags_dynamic_files = 2
+"Find tags either in the home or the project directories
+set tags=./tags,tags;$HOME
+"let g:easytags_dynamic_files = 2
 
 "Set ctags by file type
 let g:easytags_dynamic_files = 1
