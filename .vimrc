@@ -45,6 +45,9 @@ Plugin 'godlygeek/tabular'
 "provides linting and type-information for haskell
 Plugin 'eagletmt/ghcmod-vim'
 
+"provide neco-ghc for haskell completion
+Plugin 'eagletmt/neco-ghc'
+
 "syntax highlighting alternative(??)
 Plugin 'neovimhaskell/haskell-vim'
 
@@ -68,6 +71,12 @@ Plugin 'Quramy/tsuquyomi'
 " Angular CLI Plugin
 Plugin 'bdauria/angular-cli.vim'
 
+"Plugin fugitive for working with git
+Plugin 'tpope/vim-fugitive'
+
+"Plugin for autocompletion
+Plugin 'Shougo/neocomplete.vim'
+
 call vundle#end()
 
 " ******************** General Settings **************************************
@@ -80,6 +89,8 @@ nnoremap <Left> :echoe "Use h"<CR>
 nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
+inoremap <BS> <Nop>
+inoremap <Del> <Nop>
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -87,13 +98,19 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-" Auto indent pasted text
-nnoremap p p=`]<C-o>
-nnoremap P P=`]<C-o>
+" Adjust window sizes
+map <leader>w- <C-W>- " smaller
+map <leader>w+ <C-W>+ " larger
+map <leader>w[ <C-W>= " equal
+map <leader>w] <C-W>_ " fill screen
 
 "open new windows to the right and bottom
 set splitbelow
 set splitright
+
+" splitting windows
+map <leader>; <C-W>s
+map <leader>` <C-W>v
 
 "Start scrolling three lines before the horizontal window border
 set scrolloff=3
@@ -136,25 +153,32 @@ endfunction
 
 noremap <leader>ss :call StripWhitespace()<CR>
 
+"set up airline
+set laststatus=2
+let g:airline_powerline_fonts=1
+
+" Auto indent pasted text
+nnoremap p p=`]<C-o>
+nnoremap P P=`]<C-o>
+
+" ********************* Obsession ***********************************************
+
 " If a session exists load it, otherwise create a new session using Obsession
 augroup sessionstart
   " clear all previous autocommands
   autocmd!
   " add an auto command to load a session if it exists
    autocmd VimEnter * nested
-      \ if !argc() && empty(v:this_session) && !&modified |
-      \   if filereadable('Session.vim') |
-      \    source Session.vim |
-      \      elseif |
-      \       Obsession |
-      \    endif |
-      \ endif
-augroup end
-" *********************************************************************************
+         \ if !argc() && empty(v:this_session) && !&modified |
+         \ if filereadable('Session.vim') |
+         \ source Session.vim |
+         \  elseif |
+         \   Obsession |
+         \ endif |
+         \ endif |
+augroup end |
 
-"set up airline
-set laststatus=2
-let g:airline_powerline_fonts=1
+" *********************************************************************************
 
 " ************************ Syntax Highlighting *******************************
 
@@ -316,6 +340,7 @@ augroup end
 let g:tsuqoyami_disable_quickfix = 1
 let g:syntastic_typescript_checkers = ['tslint', 'tsuquyomi']
 
+
 " *********************************************************************
 
 " ********************* Flow type syntax highlighting ************************
@@ -348,6 +373,13 @@ vmap a= :Tabularize /=<CR>
 vmap a;= :Tabularize /::<CR>
 vmap a-= :Tabularize /-><CR>
 
+"Setup autocompletion for haskell using necoghc
+let g:haskellmode_completion_ghc = 1
+let g:neocomplete#enable_at_startup = 1
+augroup vimrc
+  autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+augroup end
+
 " *********************************************************************
 
 " ***************** Angular CLI ***********************************
@@ -364,6 +396,20 @@ augroup vimrc
 augroup end
 
 " *********************************************************************
+
+" ********************* Typescript ******************************************
+
+"Display method signature in the popup window.
+let g:tsuquyomi_completion_detail = 1
+
+augroup vimrc
+
+  "show method signature when you complete the arguments of a method
+  autocmd FileType typescript setlocal completeopt+=menu,preview
+
+augroup end
+
+" *****************************************************************************
 
 " ****************** EasyTags configuration **********************************
 
