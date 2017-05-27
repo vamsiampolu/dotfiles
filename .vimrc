@@ -24,8 +24,6 @@ Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'wakatime/vim-wakatime'
 
-Plugin 'altercation/vim-colors-solarized'
-
 Plugin 'scrooloose/syntastic'
 
 Plugin 'tpope/vim-endwise'
@@ -70,8 +68,8 @@ Plugin 'fleischie/vim-styled-components'
 "Syntax highlighting for graphql
 Plugin 'jparise/vim-graphql'
 
-"Use Dash to lookup documentation under the cursor
-Plugin 'keith/investigate.vim'
+Plugin 'flazz/vim-colorschemes'
+
 
 call vundle#end()
 
@@ -85,6 +83,10 @@ nnoremap <Left> :echoe "Use h"<CR>
 nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
+inoremap <BS> <nop>
+inoremap <Del> <nop>
+nnoremap <BS> <nop>
+nnoremap <Del> <nop>
 
 " Quicker window movement
 nnoremap <C-j> <C-w>j
@@ -197,10 +199,9 @@ let g:airline_powerline_fonts=1
 
 " ************************ Syntax Highlighting *******************************
 
-"use the solarized dark theme
+"use the apprentice dark theme
 syntax enable
-set background=dark
-colorscheme solarized
+colorscheme apprentice
 
 "The following should be done automatically for the default colour scheme
 "at least, but it is not in Vim 7.0.17.
