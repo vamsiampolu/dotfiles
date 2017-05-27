@@ -274,60 +274,14 @@ highlight PmenuSel ctermfg=0 ctermbg=7
 
 " ********************** Open Sidebar using netrw ****************************
 
-fun! VexToggle(dir)
-  if exists('t:vex_buf_nr')
-    call VexClose()
-  else
-    call VexOpen(a:dir)
-  endif
-endf
+"press ,Tab to open netrw in the project directory
+noremap <Leader><Tab> :Lexplore<CR>
 
-fun! VexOpen(dir)
-  let g:netrw_browse_split=4 "open files in previous window
-  let vex_width=40
-
-  execute 'Vexplore ' . a:dir
-  let t:vex_buf_nr = bufnr('%')
-  wincmd H
-
-  call VexSize(vex_width)
-endf
-
-
-fun! VexClose()
-  let cur_win_nr = winnr()
-  let target_nr = (cur_win_nr == 1 ? winnr('#'): cur_win_nr )
-  1wincmd w
-  close
-  unlet t:vex_buf_nr
-
-  execute (target_nr - 1) . 'wincmd w'
-  call NormalizeWidths()
-endf
-
-fun! VexSize(vex_width)
-  execute 'vertical resize' . a:vex_width
-  set winfixwidth
-  call NormalizeWidths()
-endf
-
-fun! NormalizeWidths()
-  let eadir_pref=&eadirection
-  set eadirection=hor
-  set equalalways! equalalways!
-  let eadirection = eadir_pref
-endf
-
-"press :Tab to open netrw in the project directory
-noremap <Leader><Tab> :call VexToggle(getcwd())<CR>
 "press :` to open netrw in the directory of the file being edited
-noremap <Leader>` :call VexToggle("")<CR>
+"noremap <Leader>` :call VexToggle("")<CR>
 
-augroup NetrwGroup
-  autocmd! BufEnter * call NormalizeWidths()
-augroup END
-
-"optional netrw settings copied from Ivan Brennac
+" absolute width of netrw window
+let g:netrw_winsize=25
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 let g:netrw_altv=0
