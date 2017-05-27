@@ -28,10 +28,6 @@ Plugin 'scrooloose/syntastic'
 
 Plugin 'tpope/vim-endwise'
 
-Plugin 'tpope/vim-obsession'
-
-Plugin 'tpope/vim-fugitive'
-
 Plugin 'xolox/vim-misc'
 
 Plugin 'xolox/vim-easytags'
