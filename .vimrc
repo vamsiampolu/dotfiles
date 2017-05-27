@@ -73,6 +73,7 @@ Plugin 'fleischie/vim-styled-components'
 "Syntax highlighting for graphql
 Plugin 'jparise/vim-graphql'
 
+"Just add colorschemes without having to install them
 Plugin 'flazz/vim-colorschemes'
 
 
@@ -81,6 +82,9 @@ Plugin 'tpope/vim-fugitive'
 
 "Plugin for autocompletion
 Plugin 'Shougo/neocomplete.vim'
+
+"shows git diff in the gutter
+Plugin 'airblade/vim-gitgutter'
 
 call vundle#end()
 
@@ -135,6 +139,18 @@ set scrolloff=3
 " This will ensure file name uniqueness in the preserve directory.set undodir=~/.vim/.undo//
 set backupdir=~/.vim/.backup//
 set directory=~/.vim/.swp//
+
+"set autocompletion of commands using the wildmenu
+"you can hit tab thrice
+"     first time -> complete as much as possible
+"     second time -> provide a list of options
+"     third time -> cycle through the list of options
+set wildmode=longest,list,full
+set wildmenu
+
+"gitgutter plugin recommends that the updatetime which is set to 4s by
+"default be reduced to 250ms
+set updatetime=250
 
 " *********************************************************************************
 
