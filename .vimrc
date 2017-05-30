@@ -76,6 +76,8 @@ Plugin 'jparise/vim-graphql'
 "Just add colorschemes without having to install them
 Plugin 'flazz/vim-colorschemes'
 
+"Plugin for git syntax highlighting and other niceties
+Plugin 'tpope/vim-git'
 
 "Plugin fugitive for working with git
 Plugin 'tpope/vim-fugitive'
