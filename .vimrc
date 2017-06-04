@@ -274,12 +274,12 @@ highlight PmenuSel ctermfg=0 ctermbg=7
 
 " ********************** Open Sidebar using netrw ****************************
 
-"press ,Tab to open netrw in the project directory
+"press :Tab to open netrw in the project directory
 noremap <Leader><Tab> :Lexplore<CR>
-
 "press :` to open netrw in the directory of the file being edited
 "noremap <Leader>` :call VexToggle("")<CR>
 
+"optional netrw settings copied from Ivan Brennac
 " absolute width of netrw window
 let g:netrw_winsize=25
 let g:netrw_liststyle=3
@@ -462,6 +462,16 @@ augroup end
 
 "Async ctags updates
 let g:easytags_async = 1
+let g:easytags_cmd_javascript = 'jsctags'
+let g:easytags_languages = {
+\   'javascript': {
+\     'cmd': g:easytags_cmd_javascript,
+\	    'args': [],
+\	    'fileoutput_opt': '-f',
+\	    'stdout_opt': '-f-',
+\	    'recurse_flag': '-R'
+\   }
+\}
 
 "Store tags in ./tags
 let g:easytags_file = '~/.vim/tags'
