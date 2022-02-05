@@ -6,6 +6,16 @@ set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
 set backupdir=~/.cache/vim " Directory to store backup files.
 
+
+"Strip trailing whitespace (,ss)
+function! StripWhitespace()
+  let save_cursor = getpos('.')
+  let old_query = getreg('/')
+  :%s/\s\+$//e
+  call setpos('.',save_cursor)
+  call setreg('/',old_query)
+endfunction
+
 let mapleader=";"
 highlight Pmenu guibg=brown gui=bold
 
@@ -79,3 +89,5 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
+" Strip whitespace using ;ss
+noremap <leader>ss :call StripWhitespace()<CR>
